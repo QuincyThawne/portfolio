@@ -19,6 +19,55 @@ const npcSpriteMap: Record<string, string> = {
   contact: professorSprite,
 };
 
+// Helper function to render text with clickable links for contact section
+const renderContactText = (text: string, section: string) => {
+  if (section !== 'contact') {
+    return text;
+  }
+
+  // Handle email
+  if (text.includes('CLICK_TO_EMAIL')) {
+    const email = portfolioData.contact.email;
+    return (
+      <span>
+        📧 Email: <a 
+          href={`mailto:${email}`}
+          className="text-primary hover:text-primary/80 underline cursor-pointer font-medium"
+          onClick={(e) => e.stopPropagation()}
+        >
+          Click here to email
+        </a>
+      </span>
+    );
+  }
+
+  // Handle social links
+  if (text.includes('CLICK_TO_OPEN')) {
+    const match = text.match(/🔗 (.*?): CLICK_TO_OPEN/);
+    if (match) {
+      const platform = match[1];
+      const link = portfolioData.personal.socialLinks.find(l => l.platform === platform);
+      if (link) {
+        return (
+          <span>
+            🔗 {platform}: <a 
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 underline cursor-pointer font-medium"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Click here to open
+            </a>
+          </span>
+        );
+      }
+    }
+  }
+
+  return text;
+};
+
 // Generate detailed dialogues from portfolio data
 const generateDetailedDialogues = (section: string): string[] => {
   switch (section) {
@@ -34,22 +83,16 @@ const generateDetailedDialogues = (section: string): string[] => {
     case 'projects':
       const projectDialogues: string[] = [
         `Ahoy! Welcome to the Project Harbor!`,
-        `Here you'll find amazing creations done by Murali Vennapusa. 
+        `Here you'll find the featured creations done by Murali Vennapusa. 
         Let me tell you about each one...`,
       ];
-      // Show ALL projects, not just featured
-      portfolioData.projects.forEach((project, index) => {
-        projectDialogues.push();
+      // Show ONLY featured projects
+      const featuredProjects = portfolioData.projects.filter(p => p.featured === true);
+      featuredProjects.forEach((project) => {
         projectDialogues.push(`${project.title} : ${project.description}.  
           Built with: ${project.technologies.join(', ')}`);
-        // if (project.liveUrl) {
-        //   projectDialogues.push(`🌐 Live at: ${project.liveUrl}`);
-        // }
-        // if (project.githubUrl) {
-        //   projectDialogues.push(`💻 Code: ${project.githubUrl}`);
-        // }
       });
-      projectDialogues.push(`And that's the entire fleet! Projects ready to set sail! Anchors aweigh!`);
+      projectDialogues.push(`And that's the featured fleet! Projects ready to set sail! Anchors aweigh!`);
       return projectDialogues;
     case 'skills':
       const skillsByCategory = {
@@ -62,22 +105,7 @@ const generateDetailedDialogues = (section: string): string[] => {
         `So, you want to know about Murali Vennapusa's skills?`,
         `The techniques mastered by him are many... Let me break them down for you!`,
       ];
-      skillDialogues.push(`🖥️ FRONTEND SKILLS:`);
-      skillsByCategory.frontend.forEach(skill => {
-        skillDialogues.push(`   • ${skill.name} - Mastery: ${skill.level}%`);
-      });
-      skillDialogues.push(`⚙️ BACKEND SKILLS:`);
-      skillsByCategory.backend.forEach(skill => {
-        skillDialogues.push(`   • ${skill.name} - Mastery: ${skill.level}%`);
-      });
-      skillDialogues.push(`🛠️ TOOLS & TECHNOLOGIES:`);
-      skillsByCategory.tools.forEach(skill => {
-        skillDialogues.push(`   • ${skill.name} - Mastery: ${skill.level}%`);
-      });
-      skillDialogues.push(`💡 SOFT SKILLS:`);
-      skillsByCategory.soft.forEach(skill => {
-        skillDialogues.push(`   • ${skill.name} - Mastery: ${skill.level}%`);
-      });
+      skillDialogues.push(`press K to view skills in detail because its beter for user experience`);
       skillDialogues.push(`That's his skill set! A true champion never stops training!`);
       return skillDialogues;
     case 'achievements':
@@ -95,10 +123,10 @@ const generateDetailedDialogues = (section: string): string[] => {
       const contactDialogues: string[] = [
         `Greetings, young trainer!`,
         `Want to get in touch with the developer? Here's how you can reach them...`,
-        `📧 Email: ${portfolioData.contact.email}`,
+        `📧 Email: CLICK_TO_EMAIL`,
       ];
       portfolioData.personal.socialLinks.forEach(link => {
-        contactDialogues.push(`🔗 ${link.platform}: ${link.url}`);
+        contactDialogues.push(`🔗 ${link.platform}: CLICK_TO_OPEN`);
       });
       contactDialogues.push(portfolioData.contact.availability);
       contactDialogues.push(`He is Always open to connect with fellow developers and enthusiasts!`);
@@ -359,7 +387,7 @@ const GameDialogue: React.FC<GameDialogueProps> = ({
             />
             
             <p className="text-white text-lg leading-relaxed relative z-10 font-light">
-              {displayedText}
+              {renderContactText(displayedText, npc.section)}
               {isTyping && <span className="inline-block w-0.5 h-5 bg-primary ml-1 animate-pulse" />}
             </p>
           </div>

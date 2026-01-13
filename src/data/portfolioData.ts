@@ -101,7 +101,6 @@ export const portfolioData: PortfolioData = {
       { platform: "LinkedIn", url: "https://linkedin.com/in/vennapusa-murali", icon: "linkedin" },
       { platform: "Twitter", url: "https://twitter.com/muralireddyon", icon: "twitter" },
       { platform: "Instagram", url: "https://instagram.com/muralireddyonline", icon: "instagram" },
-      { platform: "Discord", url: "https://discord.com/users/yourusername", icon: "discord" },
       { platform: "LeetCode", url: "https://leetcode.com/u/Murali-Cyber/", icon: "leetcode" },
     ],
   },
