@@ -9,7 +9,7 @@ import AchievementsSection from './sections/AchievementsSection';
 import ContactSection from './sections/ContactSection';
 import GamePreviewSection from './sections/GamePreviewSection';
 import Footer from './Footer';
-import Hyperspeed from '../background/Hyperspeed';
+// import Hyperspeed from '../background/Hyperspeed';
 import TargetCursor from './sections/TargetCursor';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -41,7 +41,7 @@ const TraditionalPortfolio: React.FC = () => {
 
   return (
     <div className="relative min-h-screen">
-      <div className='fixed'><Hyperspeed
+      {/* <div className='fixed'><Hyperspeed
         effectOptions={{
           onSpeedUp: () => { },
           onSlowDown: () => { },
@@ -80,7 +80,7 @@ const TraditionalPortfolio: React.FC = () => {
           }
         }}
         />
-      </div>
+      </div> */}
       {/* Background */}
       <Starfield darkMode={darkMode} />
       
